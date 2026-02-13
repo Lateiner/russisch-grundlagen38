@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kasus- und Endungstraining: Russische Partizipien</title>
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --border-radius: 10px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .exercise-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+        }
+
+        .instruction {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .sentence {
+            font-size: 1.15rem;
+            margin-bottom: 15px;
+            line-height: 2;
+        }
+
+        .base-form {
+            color: #7f8c8d;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        select {
+            padding: 5px 8px;
+            font-size: 1rem;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+
+        select.correct {
+            background-color: #d4edda !important;
+            border-color: var(--success-color) !important;
+        }
+
+        select.incorrect {
+            background-color: #f8d7da !important;
+            border-color: var(--error-color) !important;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); color: white; }
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-solution { background-color: var(--primary-color); color: white; }
+
+        button:hover { opacity: 0.85; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .sentence { font-size: 1rem; }
+            .btn-group { flex-direction: column; }
+            button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Kasus- und Endungstraining (Kongruenz)</h1>
+
+    <div id="exercise-list">
+        <!-- Aufgaben werden hier eingefügt -->
+    </div>
+</div>
+
+<script>
+    const exercises = [
+        {
+            id: 1,
+            textBefore: "Мы любуемся",
+            baseForm: "создаваемый",
+            textAfter: "памятником.",
+            options: ["создаваемый", "создаваемым", "создаваемого"],
+            answer: "создаваемым",
+            hint: "Instrumental Maskulin"
+        },
+        {
+            id: 2,
+            textBefore: "Я читаю статью,",
+            baseForm: "переводимый",
+            textAfter: "переводчиком.",
+            options: ["переводимую", "переводимой", "переводимая"],
+            answer: "переводимую",
+            hint: "Akkusativ Feminin"
+        },
+        {
+            id: 3,
+            textBefore: "Мы подошли к",
+            baseForm: "изучаемый",
+            textAfter: "зданию.",
+            options: ["изучаемом", "изучаемому", "изучаемых"],
+            answer: "изучаемому",
+            hint: "Dativ Neutrum"
+        },
+        {
+            id: 4,
+            textBefore: "В",
+            baseForm: "обсуждаемый",
+            textAfter: "книге много картинок.",
+            options: ["обсуждаемую", "обсуждаемой", "обсуждаемых"],
+            answer: "обсуждаемой",
+            hint: "Präpositional Feminin"
+        },
+        {
+            id: 5,
+            textBefore: "У нас нет",
+            baseForm: "передаваемый",
+            textAfter: "программы.",
+            options: ["передаваемую", "передаваемой", "передаваемых"],
+            answer: "передаваемой",
+            hint: "Genitiv Feminin"
+        },
+        {
+            id: 6,
+            textBefore: "Мы гордимся",
+            baseForm: "любимый",
+            textAfter: "героями.",
+            options: ["любимым", "любимыми", "любимых"],
+            answer: "любимыми",
+            hint: "Instrumental Plural"
+        },
+        {
+            id: 7,
+            textBefore: "Я вижу",
+            baseForm: "строимый",
+            textAfter: "дом.",
+            options: ["строимый", "строимым", "строимого"],
+            answer: "строимый",
+            hint: "Akkusativ Maskulin (unbelebt)"
+        },
+        {
+            id: 8,
+            textBefore: "Учитель говорит о",
+            baseForm: "проверяемый",
+            textAfter: "работах.",
+            options: ["проверяемые", "проверяемыми", "проверяемых"],
+            answer: "проверяемых",
+            hint: "Präpositional Plural"
+        },
+        {
+            id: 9,
+            textBefore: "Письмо адресовано",
+            baseForm: "уважаемый",
+            textAfter: "пассажирам.",
+            options: ["уважаемые", "уважаемым", "уважаемых"],
+            answer: "уважаемым",
+            hint: "Dativ Plural"
+        },
+        {
+            id: 10,
+            textBefore: "У",
+            baseForm: "используемый",
+            textAfter: "метода есть плюсы.",
+            options: ["используемым", "используемого", "используемому"],
+            answer: "используемого",
+            hint: "Genitiv Maskulin"
+        },
+        {
+            id: 11,
+            textBefore: "Под",
+            baseForm: "хранимый",
+            textAfter: "документом стоит подпись.",
+            options: ["хранимым", "хранимого", "хранимый"],
+            answer: "хранимым",
+            hint: "Instrumental Maskulin"
+        },
+        {
+            id: 12,
+            textBefore: "Мы смотрим на",
+            baseForm: "создаваемый",
+            textAfter: "картину.",
+            options: ["создаваемая", "создаваемую", "создаваемой"],
+            answer: "создаваемую",
+            hint: "Akkusativ Feminin"
+        }
+    ];
+
+    function renderExercises() {
+        const list = document.getElementById('exercise-list');
+        exercises.forEach(ex => {
+            const card = document.createElement('div');
+            card.className = 'exercise-card';
+            card.id = `ex-${ex.id}`;
+
+            card.innerHTML = `
+                <span class="instruction">Setze das Partizip in der richtigen Endung ein:</span>
+                <div class="sentence">
+                    ${ex.textBefore} 
+                    <span class="base-form">(${ex.baseForm})</span>
+                    <select id="select-${ex.id}" data-answer="${ex.answer}">
+                        <option value="">-- ? --</option>
+                        ${ex.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                    </select>
+                    ${ex.textAfter}
+                </div>
+                <div class="btn-group">
+                    <button class="btn-check" onclick="check(${ex.id})">Überprüfen</button>
+                    <button class="btn-reset" onclick="reset(${ex.id})">Zurücksetzen</button>
+                    <button class="btn-solution" onclick="show(${ex.id})">Lösung anzeigen</button>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    window.check = function(id) {
+        const select = document.getElementById(`select-${id}`);
+        if (!select.value) return;
+        if (select.value === select.dataset.answer) {
+            select.className = 'correct';
+        } else {
+            select.className = 'incorrect';
+        }
+    };
+
+    window.reset = function(id) {
+        const select = document.getElementById(`select-${id}`);
+        select.value = "";
+        select.className = "";
+    };
+
+    window.show = function(id) {
+        const select = document.getElementById(`select-${id}`);
+        select.value = select.dataset.answer;
+        select.className = 'correct';
+    };
+
+    renderExercises();
+</script>
+
+</body>
+</html>
