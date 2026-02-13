@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformationsaufgaben: Passive Partizipien</title>
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .example-box {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .exercise-block {
+            border-bottom: 1px solid #eee;
+            padding: 20px 0;
+            margin-bottom: 10px;
+        }
+
+        .exercise-block:last-child { border-bottom: none; }
+
+        .sentence-orig {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .transformation-area {
+            font-size: 1.1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        select {
+            padding: 6px;
+            border-radius: 4px;
+            border: 2px solid #ccc;
+            background-color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        select.correct {
+            border-color: var(--success-color);
+            background-color: #d4edda;
+        }
+
+        select.incorrect {
+            border-color: var(--error-color);
+            background-color: #f8d7da;
+        }
+
+        .btn-group {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); color: white; }
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-solution { background-color: var(--primary-color); color: white; }
+
+        button:hover { opacity: 0.8; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .transformation-area { font-size: 1rem; }
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Transformationsaufgaben (Satzebene)</h1>
+
+    <div class="example-box">
+        <strong>Aufgabe:</strong> „Wandle den Relativsatz mit который in eine Partizipialkonstruktion um.“<br>
+        <em>Beispiel:</em> Книга, которую читает ученик &rarr; Книга, <strong>читаемая учеником</strong>.
+    </div>
+
+    <div id="exercise-container"></div>
+</div>
+
+<script>
+    const exercises = [
+        {
+            id: 1,
+            orig: "Язык, который изучает студент...",
+            prefix: "Язык,",
+            participle: "изучаемый",
+            agent: "студентом",
+            optionsP: ["изучаемый", "изучаемая", "изучаемое"],
+            optionsA: ["студент", "студентом", "студента"]
+        },
+        {
+            id: 2,
+            orig: "Статья, которую переводит журналист...",
+            prefix: "Статья,",
+            participle: "переводимая",
+            agent: "журналистом",
+            optionsP: ["переводимый", "переводимая", "переводимые"],
+            optionsA: ["журналист", "журналистом", "журналиста"]
+        },
+        {
+            id: 3,
+            orig: "Задание, которое выполняет ученик...",
+            prefix: "Задание,",
+            participle: "выполняемое",
+            agent: "учеником",
+            optionsP: ["выполняемый", "выполняемая", "выполняемое"],
+            optionsA: ["ученик", "учеником", "ученику"]
+        },
+        {
+            id: 4,
+            orig: "Дом, который строят рабочие...",
+            prefix: "Дом,",
+            participle: "строимый",
+            agent: "рабочими",
+            optionsP: ["строимый", "строимая", "строимые"],
+            optionsA: ["рабочие", "рабочими", "рабочих"]
+        },
+        {
+            id: 5,
+            orig: "Проблема, которую обсуждает комитет...",
+            prefix: "Проблема,",
+            participle: "обсуждаемая",
+            agent: "комитетом",
+            optionsP: ["обсуждаемый", "обсуждаемая", "обсуждаемое"],
+            optionsA: ["комитет", "комитетом", "комитета"]
+        },
+        {
+            id: 6,
+            orig: "Метод, который использует врач...",
+            prefix: "Метод,",
+            participle: "используемый",
+            agent: "врачом",
+            optionsP: ["используемый", "используемая", "используемое"],
+            optionsA: ["врач", "врачом", "врача"]
+        },
+        {
+            id: 7,
+            orig: "Текст, который проверяет учитель...",
+            prefix: "Текст,",
+            participle: "проверяемый",
+            agent: "учителем",
+            optionsP: ["проверяемый", "проверяемая", "проверяемые"],
+            optionsA: ["учитель", "учителем", "учителя"]
+        },
+        {
+            id: 8,
+            orig: "Закон, который принимает парламент...",
+            prefix: "Закон,",
+            participle: "принимаемый",
+            agent: "парламентом",
+            optionsP: ["принимаемый", "принимаемая", "принимаемое"],
+            optionsA: ["парламент", "парламентом", "парламента"]
+        },
+        {
+            id: 9,
+            orig: "Музыка, которую слушает мама...",
+            prefix: "Музыка,",
+            participle: "слушаемая",
+            agent: "мамой",
+            optionsP: ["слушаемый", "слушаемая", "слушаемые"],
+            optionsA: ["мама", "мамой", "маме"]
+        },
+        {
+            id: 10,
+            orig: "Фильм, который обожает зритель...",
+            prefix: "Фильм,",
+            participle: "обожаемый",
+            agent: "зрителем",
+            optionsP: ["обожаемый", "обожаемая", "обожаемое"],
+            optionsA: ["зритель", "зрителем", "зрителя"]
+        },
+        {
+            id: 11,
+            orig: "Письмо, которое хранит семья...",
+            prefix: "Письмо,",
+            participle: "хранимое",
+            agent: "семьёй",
+            optionsP: ["хранимый", "хранимая", "хранимое"],
+            optionsA: ["семья", "семьёй", "семьи"]
+        },
+        {
+            id: 12,
+            orig: "Решение, которое принимаем мы...",
+            prefix: "Решение,",
+            participle: "принимаемое",
+            agent: "нами",
+            optionsP: ["принимаемый", "принимаемая", "принимаемое"],
+            optionsA: ["мы", "нами", "нас"]
+        }
+    ];
+
+    function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    function render() {
+        const container = document.getElementById('exercise-container');
+        exercises.forEach(ex => {
+            const block = document.createElement('div');
+            block.className = 'exercise-block';
+            block.innerHTML = `
+                <span class="sentence-orig">${ex.orig}</span>
+                <div class="transformation-area">
+                    <span>${ex.prefix}</span>
+                    <select id="p-${ex.id}" data-ans="${ex.participle}">
+                        <option value="">-- Partizip --</option>
+                        ${shuffle([...ex.optionsP]).map(o => `<option value="${o}">${o}</option>`).join('')}
+                    </select>
+                    <select id="a-${ex.id}" data-ans="${ex.agent}">
+                        <option value="">-- Urheber --</option>
+                        ${shuffle([...ex.optionsA]).map(o => `<option value="${o}">${o}</option>`).join('')}
+                    </select>
+                    <span>.</span>
+                </div>
+                <div class="btn-group">
+                    <button class="btn-check" onclick="check(${ex.id})">Überprüfen</button>
+                    <button class="btn-reset" onclick="reset(${ex.id})">Zurücksetzen</button>
+                    <button class="btn-solution" onclick="solve(${ex.id})">Lösung anzeigen</button>
+                </div>
+            `;
+            container.appendChild(block);
+        });
+    }
+
+    window.check = (id) => {
+        const p = document.getElementById(`p-${id}`);
+        const a = document.getElementById(`a-${id}`);
+        p.className = (p.value === p.dataset.ans) ? 'correct' : 'incorrect';
+        a.className = (a.value === a.dataset.ans) ? 'correct' : 'incorrect';
+    };
+
+    window.reset = (id) => {
+        const p = document.getElementById(`p-${id}`);
+        const a = document.getElementById(`a-${id}`);
+        p.value = ""; a.value = "";
+        p.className = ""; a.className = "";
+    };
+
+    window.solve = (id) => {
+        const p = document.getElementById(`p-${id}`);
+        const a = document.getElementById(`a-${id}`);
+        p.value = p.dataset.ans;
+        a.value = a.dataset.ans;
+        p.className = 'correct';
+        a.className = 'correct';
+    };
+
+    render();
+</script>
+
+</body>
+</html>
