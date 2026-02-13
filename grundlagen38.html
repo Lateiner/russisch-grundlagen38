@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Passive Partizipien Präsens</title>
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .intro-box {
+            background-color: #eef2f7;
+            padding: 20px;
+            border-left: 5px solid var(--secondary-color);
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .exercise-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: var(--border-radius);
+            transition: transform 0.2s;
+        }
+
+        .exercise-card:hover {
+            border-color: var(--secondary-color);
+        }
+
+        .btn-group {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); color: white; }
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-solution { background-color: var(--primary-color); color: white; }
+
+        button:hover { opacity: 0.8; }
+
+        .correct { background-color: #d4edda !important; border: 2px solid var(--success-color) !important; }
+        .incorrect { background-color: #f8d7da !important; border: 2px solid var(--error-color) !important; }
+
+        .solution-text {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e8f4fd;
+            border-radius: 4px;
+            display: none;
+            font-style: italic;
+        }
+
+        select, input[type="text"] {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        /* Drag and Drop Styles */
+        .drag-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .drag-item {
+            padding: 8px 12px;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 4px;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .drop-zone {
+            min-width: 120px;
+            min-height: 35px;
+            border: 2px dashed #bbb;
+            display: inline-block;
+            vertical-align: middle;
+            border-radius: 4px;
+            padding: 2px 10px;
+            background: #fafafa;
+        }
+
+        .drop-zone.hover { background: #e1f5fe; }
+
+        .word-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #eee;
+            margin: 2px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .btn-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Passive Partizipien Präsens</h1>
+    
+    <div class="intro-box">
+        <h3>Kurzerklärung</h3>
+        <p>Das passive Partizip Präsens drückt eine Handlung aus, die gerade mit einem Objekt geschieht (z. B. „der gelesene Brief“). Es wird nur von <strong>transitiven Verben</strong> im <strong>unvollendeten Aspekt (НСВ)</strong> gebildet.</p>
+        <ul>
+            <li><strong>1. Konjugation:</strong> Suffix <strong>-ем-</strong> (Beispiel: читать &rarr; читаемый)</li>
+            <li><strong>2. Konjugation:</strong> Suffix <strong>-им-</strong> (Beispiel: любить &rarr; любимый)</li>
+            <li>Der Urheber der Handlung steht meist im <strong>Instrumental</strong> (Fall 5).</li>
+        </ul>
+        <p><em>Beispiel:</em> Книга, читаемая учеником (Das Buch, das vom Schüler gelesen wird).</p>
+    </div>
+
+    <!-- Übung 1 -->
+    <div class="exercise-card" id="ex1">
+        <h2>1. Voraussetzungen prüfen</h2>
+        <p>Welche Verben können ein passives Partizip Präsens bilden? (Nur transitive НСВ-Verben)</p>
+        <div>
+            <input type="checkbox" data-ans="true"> изучать (lernen)<br>
+            <input type="checkbox" data-ans="false"> идти (gehen - intransitiv)<br>
+            <input type="checkbox" data-ans="true"> любить (lieben)<br>
+            <input type="checkbox" data-ans="false"> написать (schreiben - SV/vollendet)
+        </div>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkCheckboxTask(1)">Überprüfen</button>
+            <button class="btn-reset" onclick="resetTask(1)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(1)">Lösung anzeigen</button>
+        </div>
+        <div class="solution-text" id="sol1">Richtig sind: изучать, любить. (идти ist intransitiv, написать ist vollendet).</div>
+    </div>
+
+    <!-- Übung 2 -->
+    <div class="exercise-card" id="ex2">
+        <h2>2. Suffix-Wahl</h2>
+        <p>Wähle das richtige Suffix für die „мы“-Form als Basis:</p>
+        <p>сообщать (1. Konj.) &rarr; сообща<select data-ans="ем">
+            <option value="">--?</option>
+            <option value="ем">ем</option>
+            <option value="им">им</option>
+        </select>ый</p>
+        <p>хранить (2. Konj.) &rarr; хран<select data-ans="им">
+            <option value="">--?</option>
+            <option value="ем">ем</option>
+            <option value="им">им</option>
+        </select>ый</p>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkSelectTask(2)">Überprüfen</button>
+            <button class="btn-reset" onclick="resetTask(2)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(2)">Lösung anzeigen</button>
+        </div>
+        <div class="solution-text" id="sol2">сообщаемый (1. Konj.), хранимый (2. Konj.)</div>
+    </div>
+
+    <!-- Übung 3 -->
+    <div class="exercise-card" id="ex3">
+        <h2>3. Drag & Drop: Infinitiv & Partizip</h2>
+        <p>Ziehe das passende Partizip zum Infinitiv:</p>
+        <div class="drag-container">
+            <div class="drag-item" draggable="true" id="d1">изучаемый</div>
+            <div class="drag-item" draggable="true" id="d2">создаваемый</div>
+            <div class="drag-item" draggable="true" id="d3">уважаемый</div>
+        </div>
+        <p>уважать: <span class="drop-zone" data-ans="d3"></span></p>
+        <p>изучать: <span class="drop-zone" data-ans="d1"></span></p>
+        <p>создавать: <span class="drop-zone" data-ans="d2"></span></p>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkDragTask(3)">Überprüfen</button>
+            <button class="btn-reset" onclick="resetTask(3)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(3)">Lösung anzeigen</button>
+        </div>
+        <div class="solution-text" id="sol3">уважать - уважаемый, изучать - изучаемый, создавать - создаваемый.</div>
+    </div>
+
+    <!-- Übung 4 -->
+    <div class="exercise-card" id="ex4">
+        <h2>4. Genus und Numerus</h2>
+        <p>Wähle die passende Endung für das Partizip „используемый“ (benutzt):</p>
+        <p>книга (f.) &rarr; используем<select data-ans="ая">
+            <option value="">--?</option>
+            <option value="ый">ый</option>
+            <option value="ая">ая</option>
+            <option value="ое">ое</option>
+            <option value="ые">ые</option>
+        </select></p>
+        <p>слова (Pl.) &rarr; используем<select data-ans="ые">
+            <option value="">--?</option>
+            <option value="ый">ый</option>
+            <option value="ая">ая</option>
+            <option value="ое">ое</option>
+            <option value="ые">ые</option>
+        </select></p>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkSelectTask(4)">Überprüfen</button>
+            <button class="btn-reset" onclick="resetTask(4)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(4)">Lösung anzeigen</button>
+        </div>
+        <div class="solution-text" id="sol4">используемая (f.), используемые (pl.)</div>
+    </div>
+
+    <!-- Übung 5 -->
+    <div class="exercise-card" id="ex5">
+        <h2>5. Richtig oder Falsch?</h2>
+        <p>Vom Verb „писать“ kann man die Form „писаемый“ bilden.</p>
+        <select data-ans="Falsch">
+            <option value="">--?</option>
+            <option value="Richtig">Richtig</option>
+            <option value="Falsch">Falsch</option>
+        </select>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkSelectTask(5)">Überprüfen</button>
+            <button class="btn-reset" onclick="resetTask(5)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(5)">Lösung anzeigen</button>
+        </div>
+        <div class="solution-text" id="sol5">Falsch! „писать“ ist zwar transitiv, bildet aber kein passives Partizip Präsens.</div>
+    </div>
+
+    <!-- Übung 6 -->
+    <div class="exercise-card" id="ex6">
+        <h2>6. Kasus-Endungen</h2>
+        <p>Ergänze die richtige Endung im Satz:</p>
+        <p>Я говорю о книге, читаем<select data-ans="ой">
+            <option value="">--?</option>
+            <option value="ый">ый</option>
+            <option value="ой">ой</option>
+            <option value="ом">ом</option>
+        </select> учеником. (Präpositional f.)</p>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkSelectTask(6)">Überprüfen</button>
+            <button class="btn-reset" onclick="resetTask(6)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(6)">Lösung anzeigen</button>
+        </div>
+        <div class="solution-text" id="sol6">читаемой (wie Adjektiv im Präpositional f.)</div>
+    </div>
+
+    <!-- Übung 7 -->
+    <div class="exercise-card" id="ex7">
+        <h2>7. Aktiv zu Passiv</h2>
+        <p>Ordne das Partizip dem aktiven Satz zu:</p>
+        <div class="drag-container">
+            <div class="drag-item" draggable="true" id="d71">любимый</div>
+            <div class="drag-item" draggable="true" id="d72">изучаемый</div>
+        </div>
+        <p>Студент изучает язык &rarr; язык, <span class="drop-zone" data-ans="d72"></span> студентом.</p>
+        <p>Мама любит сына &rarr; сын, <span class="drop-zone" data-ans="d71"></span> мамой.</p>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkDragTask(7)">Überprüfen</button>
+            <button class="btn-reset" onclick="resetTask(7)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(7)">Lösung anzeigen</button>
+        </div>
+        <div class="solution-text" id="sol7">изучаемый, любимый</div>
+    </div>
+
+    <!-- Übung 8 -->
+    <div class="exercise-card" id="ex8">
+        <h2>8. Satzbau (Wortfolge)</h2>
+        <p>Welcher Satz ist grammatikalisch korrekt? (Wähle aus)</p>
+        <select data-ans="1">
+            <option value="">--?</option>
+            <option value="1">Это используемый нами метод.</option>
+            <option value="2">Это метод используемый нами.</option>
+        </select>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkSelectTask(8)">Überprüfen</button>
+            <button class="btn-reset" onclick="resetTask(8)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(8)">Lösung anzeigen</button>
+        </div>
+        <div class="solution-text" id="sol8">Satz 1 ist korrekt. Satz 2 bräuchte ein Komma: „Это метод, используемый нами.“</div>
+    </div>
+
+    <!-- Übung 9 -->
+    <div class="exercise-card" id="ex9">
+        <h2>9. Ausnahmen erkennen</h2>
+        <p>Welches Partizip behält das „-ва-“ bei?</p>
+        <select data-ans="передаваемый">
+            <option value="">--?</option>
+            <option value="изучаемый">изучаемый</option>
+            <option value="передаваемый">передаваемый</option>
+            <option value="любимый">любимый</option>
+        </select>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkSelectTask(9)">Überprüfen</button>
+            <button class="btn-reset" onclick="resetTask(9)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(9)">Lösung anzeigen</button>
+        </div>
+        <div class="solution-text" id="sol9">передаваемый (von передавать).</div>
+    </div>
+
+    <!-- Übung 10 -->
+    <div class="exercise-card" id="ex10">
+        <h2>10. Der Urheber (Instrumental)</h2>
+        <p>Wähle die richtige Form für den Urheber (Fall 5):</p>
+        <p>Статья, читаемая ... (Übersetzer - переводчик).</p>
+        <select data-ans="переводчиком">
+            <option value="">--?</option>
+            <option value="переводчик">переводчик</option>
+            <option value="переводчиком">переводчиком</option>
+            <option value="переводчика">переводчика</option>
+        </select>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkSelectTask(10)">Überprüfen</button>
+            <button class="btn-reset" onclick="resetTask(10)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(10)">Lösung anzeigen</button>
+        </div>
+        <div class="solution-text" id="sol10">переводчиком (Instrumental Singular).</div>
+    </div>
+
+    <!-- Übung 11 -->
+    <div class="exercise-card" id="ex11">
+        <h2>11. Konjugationsklassen sortieren</h2>
+        <p>Ziehe die Verben in die richtige Gruppe:</p>
+        <div class="drag-container">
+            <div class="drag-item" draggable="true" id="c1">сообщать</div>
+            <div class="drag-item" draggable="true" id="c2">видеть</div>
+            <div class="drag-item" draggable="true" id="c3">слышать</div>
+        </div>
+        <p>Suffix -ем- (1. Konj): <span class="drop-zone" data-ans="c1"></span></p>
+        <p>Suffix -им- (2. Konj): <span class="drop-zone" data-ans="c2 c3"></span> (Mehrfachbelegung möglich)</p>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkDragTask(11)">Überprüfen</button>
+            <button class="btn-reset" onclick="resetTask(11)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(11)">Lösung anzeigen</button>
+        </div>
+        <div class="solution-text" id="sol11">-ем-: сообщать; -им-: видеть, слышать (beide sind Ausnahmen der 2. Konjugation).</div>
+    </div>
+
+    <!-- Übung 12 -->
+    <div class="exercise-card" id="ex12">
+        <h2>12. Übersetzung finden</h2>
+        <p>Was bedeutet „уважаемые пассажиры“?</p>
+        <select data-ans="3">
+            <option value="">--?</option>
+            <option value="1">Reisende Fahrgäste</option>
+            <option value="2">Wartende Fahrgäste</option>
+            <option value="3">Verehrte Fahrgäste</option>
+        </select>
+        <div class="btn-group">
+            <button class="btn-check" onclick="checkSelectTask(12)">Überprüfen</button>
+            <button class="btn-reset" onclick="resetTask(12)">Zurücksetzen</button>
+            <button class="btn-solution" onclick="showSolution(12)">Lösung anzeigen</button>
+        </div>
+        <div class="solution-text" id="sol12">Verehrte Fahrgäste (von уважать - achten/verehren).</div>
+    </div>
+
+</div>
+
+<script>
+    // Drag and Drop Logic
+    let draggedItem = null;
+
+    document.querySelectorAll('.drag-item').forEach(item => {
+        item.addEventListener('dragstart', function(e) {
+            draggedItem = this;
+            e.dataTransfer.setData('text/plain', this.id);
+        });
+    });
+
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('hover');
+        });
+
+        zone.addEventListener('dragleave', function() {
+            this.classList.remove('hover');
+        });
+
+        zone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('hover');
+            const id = e.dataTransfer.getData('text/plain');
+            const el = document.getElementById(id);
+            
+            // Allow multiple items if specified in solution
+            if (this.getAttribute('data-ans').split(' ').length > 1) {
+                this.appendChild(el.cloneNode(true));
+                el.style.opacity = "0.5";
+            } else {
+                this.innerHTML = '';
+                this.appendChild(el);
+            }
+        });
+    });
+
+    // Helper functions
+    function checkCheckboxTask(id) {
+        const card = document.getElementById('ex' + id);
+        const inputs = card.querySelectorAll('input[type="checkbox"]');
+        inputs.forEach(input => {
+            const isCorrect = (input.checked.toString() === input.getAttribute('data-ans'));
+            input.parentElement.classList.toggle('correct', isCorrect);
+            input.parentElement.classList.toggle('incorrect', !isCorrect);
+        });
+    }
+
+    function checkSelectTask(id) {
+        const card = document.getElementById('ex' + id);
+        const selects = card.querySelectorAll('select');
+        selects.forEach(select => {
+            if (select.value === select.getAttribute('data-ans')) {
+                select.className = 'correct';
+            } else {
+                select.className = 'incorrect';
+            }
+        });
+    }
+
+    function checkDragTask(id) {
+        const card = document.getElementById('ex' + id);
+        const zones = card.querySelectorAll('.drop-zone');
+        zones.forEach(zone => {
+            const expectedIds = zone.getAttribute('data-ans').split(' ');
+            const currentItems = Array.from(zone.querySelectorAll('.drag-item')).map(i => i.id);
+            
+            let isCorrect = false;
+            if (expectedIds.length === 1) {
+                isCorrect = currentItems[0] === expectedIds[0];
+            } else {
+                isCorrect = expectedIds.every(eid => currentItems.includes(eid));
+            }
+
+            zone.className = 'drop-zone ' + (isCorrect ? 'correct' : 'incorrect');
+        });
+    }
+
+    function resetTask(id) {
+        const card = document.getElementById('ex' + id);
+        card.querySelectorAll('input[type="checkbox"]').forEach(i => {
+            i.checked = false;
+            i.parentElement.className = '';
+        });
+        card.querySelectorAll('select').forEach(s => {
+            s.value = '';
+            s.className = '';
+        });
+        card.querySelectorAll('.drop-zone').forEach(z => {
+            z.innerHTML = '';
+            z.className = 'drop-zone';
+        });
+        card.querySelectorAll('.correct, .incorrect').forEach(el => el.classList.remove('correct', 'incorrect'));
+        document.getElementById('sol' + id).style.display = 'none';
+        
+        // Restore drag items for that task
+        if (id === 3 || id === 7 || id === 11) {
+             location.reload(); // Simple way to restore moved DOM elements
+        }
+    }
+
+    function showSolution(id) {
+        const sol = document.getElementById('sol' + id);
+        sol.style.display = (sol.style.display === 'block') ? 'none' : 'block';
+    }
+</script>
+
+</body>
+</html>
