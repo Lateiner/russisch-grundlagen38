@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fehleranalyse: Passive Partizipien Präsens</title>
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .instruction-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .exercise-item {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .sentence {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            display: block;
+            color: var(--primary-color);
+        }
+
+        .participle-highlight {
+            font-weight: bold;
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); color: white; }
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-solution { background-color: var(--primary-color); color: white; }
+        
+        button:hover { opacity: 0.9; }
+        button:active { transform: scale(0.98); }
+
+        .choice-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .choice-btn {
+            background-color: #f8f9fa;
+            border: 2px solid #dee2e6;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .choice-btn.selected {
+            border-color: var(--secondary-color);
+            background-color: #e1f5fe;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .correct { color: var(--success-color); }
+        .incorrect { color: var(--error-color); }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .btn-group { flex-direction: column; }
+            button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Fehleranalyse (Spot the Error)</h1>
+
+    <div class="instruction-box">
+        <strong>Aufgabe:</strong> Entscheide, ob das markierte Partizip korrekt gebildet ist oder ob es im Russischen <strong>nicht existiert</strong> (obwohl das Verb transitiv ist).
+    </div>
+
+    <div id="exercise-container">
+        <!-- JS generates 12 tasks here -->
+    </div>
+</div>
+
+<script>
+    const tasks = [
+        { id: 1, sentence: "Письмо, <span class='participle-highlight'>писаемое</span> братом.", isCorrect: false, info: "Das Verb 'писать' bildet kein passives Partizip Präsens." },
+        { id: 2, sentence: "Книга, <span class='participle-highlight'>читаемая</span> всеми.", isCorrect: true, info: "Korrekt: 'читать' (1. Konj.) bildet regelmäßig 'читаемый'." },
+        { id: 3, sentence: "Ответ, <span class='participle-highlight'>ждаемый</span> нами.", isCorrect: false, info: "Das Verb 'ждать' bildet kein passives Partizip Präsens." },
+        { id: 4, sentence: "Язык, <span class='participle-highlight'>изучаемый</span> студентом.", isCorrect: true, info: "Korrekt: 'изучать' bildet regelmäßig 'изучаемый'." },
+        { id: 5, sentence: "Песня, <span class='participle-highlight'>поемая</span> хором.", isCorrect: false, info: "Das Verb 'петь' bildet kein passives Partizip Präsens." },
+        { id: 6, sentence: "Чай, <span class='participle-highlight'>пиваемый</span> гостями.", isCorrect: false, info: "Das Verb 'пить' bildet kein passives Partizip Präsens." },
+        { id: 7, sentence: "Статья, <span class='participle-highlight'>переводимая</span> ими.", isCorrect: true, info: "Korrekt: 'переводить' (2. Konj.) bildet 'переводимый'." },
+        { id: 8, sentence: "Предмет, <span class='participle-highlight'>видимый</span> издалека.", isCorrect: true, info: "Korrekt: 'видеть' (2. Konj. Ausnahme) bildet 'видимый'." },
+        { id: 9, sentence: "Вещь, <span class='participle-highlight'>беремая</span> из шкафа.", isCorrect: false, info: "Das Verb 'брать' bildet kein passives Partizip Präsens." },
+        { id: 10, sentence: "Правило, <span class='participle-highlight'>используемое</span> часто.", isCorrect: true, info: "Korrekt: 'использовать' bildet 'используемый'." },
+        { id: 11, sentence: "Праздник, <span class='participle-highlight'>любимый</span> детьми.", isCorrect: true, info: "Korrekt: 'любить' bildet 'любимый'." },
+        { id: 12, sentence: "Помощь, <span class='participle-highlight'>ждаемая</span> вовремя.", isCorrect: false, info: "Das Verb 'ждать' bildet kein passives Partizip Präsens." }
+    ];
+
+    function renderTasks() {
+        const container = document.getElementById('exercise-container');
+        tasks.forEach(task => {
+            const div = document.createElement('div');
+            div.className = 'exercise-item';
+            div.id = `ex-${task.id}`;
+            div.innerHTML = `
+                <span class="sentence">${task.sentence}</span>
+                <div class="choice-group">
+                    <button class="choice-btn" onclick="selectChoice(${task.id}, true)">Existiert / Korrekt</button>
+                    <button class="choice-btn" onclick="selectChoice(${task.id}, false)">Existiert nicht / Falsch</button>
+                </div>
+                <div class="feedback" id="feedback-${task.id}"></div>
+                <div class="btn-group">
+                    <button class="btn-check" onclick="check(${task.id})">Überprüfen</button>
+                    <button class="btn-reset" onclick="reset(${task.id})">Zurücksetzen</button>
+                    <button class="btn-solution" onclick="showSolution(${task.id})">Lösung anzeigen</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    let userChoices = {};
+
+    window.selectChoice = function(id, choice) {
+        userChoices[id] = choice;
+        const btns = document.querySelectorAll(`#ex-${id} .choice-btn`);
+        btns[0].classList.toggle('selected', choice === true);
+        btns[1].classList.toggle('selected', choice === false);
+        // Hide feedback when re-selecting
+        document.getElementById(`feedback-${id}`).style.display = 'none';
+    };
+
+    window.check = function(id) {
+        const feedback = document.getElementById(`feedback-${id}`);
+        if (userChoices[id] === undefined) {
+            feedback.innerHTML = "Bitte wähle zuerst eine Option aus.";
+            feedback.className = "feedback incorrect";
+            feedback.style.display = "block";
+            return;
+        }
+
+        const isCorrectChoice = userChoices[id] === tasks[id-1].isCorrect;
+        feedback.innerHTML = isCorrectChoice ? "Richtig! " : "Falsch. ";
+        feedback.innerHTML += tasks[id-1].info;
+        feedback.className = isCorrectChoice ? "feedback correct" : "feedback incorrect";
+        feedback.style.display = "block";
+    };
+
+    window.reset = function(id) {
+        userChoices[id] = undefined;
+        const btns = document.querySelectorAll(`#ex-${id} .choice-btn`);
+        btns.forEach(b => b.classList.remove('selected'));
+        const feedback = document.getElementById(`feedback-${id}`);
+        feedback.style.display = "none";
+    };
+
+    window.showSolution = function(id) {
+        const task = tasks[id-1];
+        selectChoice(id, task.isCorrect);
+        check(id);
+    };
+
+    renderTasks();
+</script>
+
+</body>
+</html>
