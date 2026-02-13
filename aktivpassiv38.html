@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktiv-Passiv-Kontrastierung: Russische Partizipien</title>
+    <!-- Polyfill für Drag-and-Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --active-color: #e67e22; /* Farbe für Aktiv */
+            --passive-color: #9b59b6; /* Farbe für Passiv */
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .logic-box {
+            display: flex;
+            justify-content: space-around;
+            background: #fff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logic-item {
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .logic-active { border: 2px solid var(--active-color); background: #fff5eb; }
+        .logic-passive { border: 2px solid var(--passive-color); background: #f5ebff; }
+
+        .exercise-card {
+            border: 1px solid #eee;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            background: #fff;
+            transition: transform 0.2s;
+        }
+
+        .exercise-card:hover {
+            border-color: var(--secondary-color);
+        }
+
+        .sentence-row {
+            font-size: 1.15rem;
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .russian-word {
+            font-weight: 500;
+        }
+
+        select {
+            padding: 6px 12px;
+            font-size: 1rem;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            cursor: pointer;
+            outline: none;
+        }
+
+        select.correct {
+            border-color: var(--success-color);
+            background-color: #d4edda;
+        }
+
+        select.incorrect {
+            border-color: var(--error-color);
+            background-color: #f8d7da;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); color: white; }
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-solution { background-color: var(--primary-color); color: white; }
+
+        button:hover { opacity: 0.8; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .btn-group { flex-direction: column; }
+            button { width: 100%; }
+            .sentence-row { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Aktiv-Passiv-Kontrastierung</h1>
+
+    <div class="logic-box">
+        <div class="logic-item logic-active">
+            <strong>AKTIV (-ущ/ащ)</strong><br>
+            Das Subjekt tut es selbst.<br>
+            <em>Der lesende Schüler</em>
+        </div>
+        <div class="logic-item logic-passive">
+            <strong>PASSIV (-ем/им)</strong><br>
+            Es wird mit dem Subjekt getan.<br>
+            <em>Das gelesene Buch</em>
+        </div>
+    </div>
+
+    <div id="exercise-list">
+        <!-- JS generiert Aufgaben -->
+    </div>
+</div>
+
+<script>
+    const exercises = [
+        {
+            id: 1,
+            text: "Студент, ... книгу.",
+            translation: "Der Student, der das Buch liest (Aktiv).",
+            options: ["читающий", "читаемая"],
+            answer: "читающий"
+        },
+        {
+            id: 2,
+            text: "Книга, ... студентом.",
+            translation: "Das Buch, das vom Studenten gelesen wird (Passiv).",
+            options: ["читающий", "читаемая"],
+            answer: "читаемая"
+        },
+        {
+            id: 3,
+            text: "Переводчик, ... статью.",
+            translation: "Der Übersetzer, der den Artikel übersetzt (Aktiv).",
+            options: ["переводящий", "переводимая"],
+            answer: "переводящий"
+        },
+        {
+            id: 4,
+            text: "Статья, ... переводчиком.",
+            translation: "Der Artikel, der vom Übersetzer übersetzt wird (Passiv).",
+            options: ["переводящий", "переводимая"],
+            answer: "переводимая"
+        },
+        {
+            id: 5,
+            text: "Мама, ... сына.",
+            translation: "Die Mutter, die den Sohn liebt (Aktiv).",
+            options: ["любящая", "любимый"],
+            answer: "любящая"
+        },
+        {
+            id: 6,
+            text: "Сын, ... мамой.",
+            translation: "Der Sohn, der von der Mutter geliebt wird (Passiv).",
+            options: ["любящая", "любимый"],
+            answer: "любимый"
+        },
+        {
+            id: 7,
+            text: "Рабочие, ... дом.",
+            translation: "Die Arbeiter, die das Haus bauen (Aktiv).",
+            options: ["строящие", "строимый"],
+            answer: "строящие"
+        },
+        {
+            id: 8,
+            text: "Дом, ... рабочими.",
+            translation: "Das Haus, das von den Arbeitern gebaut wird (Passiv).",
+            options: ["строящие", "строимый"],
+            answer: "строимый"
+        },
+        {
+            id: 9,
+            text: "Учитель, ... тест.",
+            translation: "Der Lehrer, der den Test prüft (Aktiv).",
+            options: ["проверяющий", "проверяемый"],
+            answer: "проверяющий"
+        },
+        {
+            id: 10,
+            text: "Тест, ... учителем.",
+            translation: "Der Test, der vom Lehrer geprüft wird (Passiv).",
+            options: ["проверяющий", "проверяемый"],
+            answer: "проверяемый"
+        },
+        {
+            id: 11,
+            text: "Люди, ... встречу.",
+            translation: "Die Leute, die das Treffen planen (Aktiv).",
+            options: ["планирующие", "планируемая"],
+            answer: "планирующие"
+        },
+        {
+            id: 12,
+            text: "Встреча, ... людьми.",
+            translation: "Das Treffen, das von den Leuten geplant wird (Passiv).",
+            options: ["планирующие", "планируемая"],
+            answer: "планируемая"
+        }
+    ];
+
+    function renderExercises() {
+        const list = document.getElementById('exercise-list');
+        exercises.forEach(ex => {
+            const card = document.createElement('div');
+            card.className = 'exercise-card';
+            card.id = `ex-${ex.id}`;
+
+            const parts = ex.text.split('...');
+
+            card.innerHTML = `
+                <div class="sentence-row">
+                    <span class="russian-word">${parts[0]}</span>
+                    <select id="select-${ex.id}" data-answer="${ex.answer}">
+                        <option value="">-- ? --</option>
+                        ${ex.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                    </select>
+                    <span class="russian-word">${parts[1]}</span>
+                </div>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 0;"><em>${ex.translation}</em></p>
+                <div class="btn-group">
+                    <button class="btn-check" onclick="check(${ex.id})">Überprüfen</button>
+                    <button class="btn-reset" onclick="reset(${ex.id})">Zurücksetzen</button>
+                    <button class="btn-solution" onclick="show(${ex.id})">Lösung anzeigen</button>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    window.check = function(id) {
+        const select = document.getElementById(`select-${id}`);
+        if (!select.value) return;
+        if (select.value === select.dataset.answer) {
+            select.className = 'correct';
+        } else {
+            select.className = 'incorrect';
+        }
+    };
+
+    window.reset = function(id) {
+        const select = document.getElementById(`select-${id}`);
+        select.value = "";
+        select.className = "";
+    };
+
+    window.show = function(id) {
+        const select = document.getElementById(`select-${id}`);
+        select.value = select.dataset.answer;
+        select.className = 'correct';
+    };
+
+    renderExercises();
+</script>
+
+</body>
+</html>
