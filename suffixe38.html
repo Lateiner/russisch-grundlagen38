@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russische Grammatik: Suffix-Zuweisung</title>
+    <!-- Polyfill für Drag-and-Drop auf Touch-Geräten -->
+    <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --error-color: #e74c3c;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --border-radius: 10px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 20px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .exercise-section {
+            margin-top: 30px;
+        }
+
+        .exercise-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            transition: border-color 0.3s;
+        }
+
+        .instruction {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .cloze-sentence {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .russian-word {
+            font-family: 'Times New Roman', serif;
+        }
+
+        select {
+            padding: 5px 10px;
+            font-size: 1.1rem;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+            outline: none;
+        }
+
+        select.correct {
+            background-color: #d4edda !important;
+            border-color: var(--success-color) !important;
+        }
+
+        select.incorrect {
+            background-color: #f8d7da !important;
+            border-color: var(--error-color) !important;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn-check { background-color: var(--secondary-color); color: white; }
+        .btn-reset { background-color: #95a5a6; color: white; }
+        .btn-solution { background-color: var(--primary-color); color: white; }
+
+        button:hover { opacity: 0.85; }
+
+        @media (max-width: 600px) {
+            .container { padding: 15px; }
+            .cloze-sentence { font-size: 1rem; }
+            .btn-group { flex-direction: column; }
+            button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Suffix-Zuweisung (Konjugationsklassen)</h1>
+
+    <div class="exercise-section" id="exercise-list">
+        <!-- Aufgaben werden per JS generiert -->
+    </div>
+</div>
+
+<script>
+    const exercises = [
+        { id: 1, infinitive: "изучать (lernen)", stem: "мы изуча", suffix: "ем", translation: "das gelernte/zu lernende" },
+        { id: 2, infinitive: "любить (lieben)", stem: "мы люб", suffix: "im", suffixDisplay: "им", translation: "das geliebte" },
+        { id: 3, infinitive: "сообщать (mitteilen)", stem: "мы сообща", suffix: "ем", translation: "das mitgeteilte" },
+        { id: 4, infinitive: "хранить (aufbewahren)", stem: "мы хран", suffix: "im", suffixDisplay: "им", translation: "das aufbewahrte" },
+        { id: 5, infinitive: "использовать (benutzen)", stem: "мы использу", suffix: "ем", translation: "das benutzte" },
+        { id: 6, infinitive: "слышать (hören - Ausnahme!)", stem: "мы слыш", suffix: "im", suffixDisplay: "им", translation: "das gehörte" },
+        { id: 7, infinitive: "обсуждать (besprechen)", stem: "мы обсужда", suffix: "ем", translation: "das besprochene" },
+        { id: 8, infinitive: "строить (bauen)", stem: "мы стро", suffix: "im", suffixDisplay: "им", translation: "das gebaute" },
+        { id: 9, infinitive: "организовать (organisieren)", stem: "мы организу", suffix: "ем", translation: "das organisierte" },
+        { id: 10, infinitive: "видеть (sehen - Ausnahme!)", stem: "мы вид", suffix: "im", suffixDisplay: "им", translation: "das gesehene" },
+        { id: 11, infinitive: "проверять (prüfen)", stem: "мы проверя", suffix: "ем", translation: "das geprüfte" },
+        { id: 12, infinitive: "ненавидеть (hassen - Ausnahme!)", stem: "мы ненавид", suffix: "im", suffixDisplay: "им", translation: "das gehasste" }
+    ];
+
+    function renderExercises() {
+        const list = document.getElementById('exercise-list');
+        exercises.forEach(ex => {
+            const card = document.createElement('div');
+            card.className = 'exercise-card';
+            card.id = `ex-${ex.id}`;
+
+            // Suffixe für Dropdown (Display-Werte)
+            const correctVal = ex.suffix === "ем" ? "ем" : "им";
+
+            card.innerHTML = `
+                <span class="instruction">„Bilde die 1. Person Plural (мы) und wähle das richtige Suffix.“</span>
+                <p>Infinitiv: <strong>${ex.infinitive}</strong></p>
+                <div class="cloze-sentence">
+                    <span class="russian-word">${ex.stem}</span>
+                    <select id="select-${ex.id}" data-answer="${correctVal}">
+                        <option value="">--?</option>
+                        <option value="ем">ем</option>
+                        <option value="им">им</option>
+                    </select>
+                    <span class="russian-word">ый</span>
+                </div>
+                <div class="btn-group">
+                    <button class="btn-check" onclick="checkAnswer(${ex.id})">Überprüfen</button>
+                    <button class="btn-reset" onclick="resetExercise(${ex.id})">Zurücksetzen</button>
+                    <button class="btn-solution" onclick="showSolution(${ex.id})">Lösung anzeigen</button>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+    }
+
+    window.checkAnswer = function(id) {
+        const select = document.getElementById(`select-${id}`);
+        const answer = select.getAttribute('data-answer');
+        
+        if (select.value === "") {
+            alert("Bitte wähle zuerst eine Option aus.");
+            return;
+        }
+
+        if (select.value === answer) {
+            select.className = 'correct';
+        } else {
+            select.className = 'incorrect';
+        }
+    }
+
+    window.resetExercise = function(id) {
+        const select = document.getElementById(`select-${id}`);
+        select.value = "";
+        select.className = "";
+    }
+
+    window.showSolution = function(id) {
+        const select = document.getElementById(`select-${id}`);
+        const answer = select.getAttribute('data-answer');
+        select.value = answer;
+        select.className = 'correct';
+    }
+
+    renderExercises();
+</script>
+
+</body>
+</html>
